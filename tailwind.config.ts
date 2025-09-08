@@ -47,6 +47,12 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        traffic: {
+          good: "hsl(var(--traffic-good))",
+          warning: "hsl(var(--traffic-warning))",
+          danger: "hsl(var(--traffic-danger))",
+          info: "hsl(var(--traffic-info))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -80,10 +86,35 @@ export default {
             height: "0",
           },
         },
+        "pulse-glow": {
+          "0%, 100%": {
+            boxShadow: "0 0 20px hsl(var(--primary) / 0.3)",
+          },
+          "50%": {
+            boxShadow: "0 0 30px hsl(var(--primary) / 0.6)",
+          },
+        },
+        "slide-in": {
+          from: {
+            transform: "translateX(-100%)",
+            opacity: "0",
+          },
+          to: {
+            transform: "translateX(0)",
+            opacity: "1",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        "slide-in": "slide-in 0.3s ease-out",
+      },
+      backgroundImage: {
+        "gradient-primary": "var(--gradient-primary)",
+        "gradient-danger": "var(--gradient-danger)",
+        "gradient-success": "var(--gradient-success)",
       },
     },
   },
