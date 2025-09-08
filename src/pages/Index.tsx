@@ -1,5 +1,9 @@
-import { Activity, BarChart3, AlertCircle, Settings } from "lucide-react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Activity, BarChart3, AlertCircle, Settings, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 import TrafficMap from "@/components/TrafficMap";
 import MetricsDashboard from "@/components/MetricsDashboard";
 import TrafficLightsPanel from "@/components/TrafficLightsPanel";
@@ -7,6 +11,48 @@ import IncidentAlerts from "@/components/IncidentAlerts";
 import heroImage from "@/assets/traffic-control-hero.jpg";
 
 const Index = () => {
+  const { user, signOut, loading } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate('/auth');
+    }
+  }, [user, loading, navigate]);
+
+  const handleSignOut = async () => {
+    const { error } = await signOut();
+    if (error) {
+      toast({
+        title: "Sign Out Failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Signed Out",
+        description: "You have been signed out successfully.",
+      });
+      navigate('/auth');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-slate-900/5 to-primary/10 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null; // Will redirect to auth page via useEffect
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -28,9 +74,21 @@ const Index = () => {
                 <div className="w-2 h-2 rounded-full bg-traffic-good animate-pulse"></div>
                 <span className="text-muted-foreground">System Online</span>
               </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <User className="h-4 w-4" />
+                <span>{user.email}</span>
+              </div>
               <Button variant="outline" size="sm">
                 <Settings className="w-4 h-4 mr-2" />
                 Settings
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={handleSignOut}
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Sign Out
               </Button>
             </div>
           </div>
